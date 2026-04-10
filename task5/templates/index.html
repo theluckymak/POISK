@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Search Engine</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            margin-top: 60px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1a73e8;
+            margin-bottom: 8px;
+        }
+        .header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .search-box {
+            margin-top: 30px;
+            display: flex;
+            width: 600px;
+            max-width: 90vw;
+        }
+        .search-box input[type="text"] {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 1rem;
+            border: 2px solid #ddd;
+            border-right: none;
+            border-radius: 25px 0 0 25px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box input[type="text"]:focus {
+            border-color: #1a73e8;
+        }
+        .search-box button {
+            padding: 14px 30px;
+            font-size: 1rem;
+            background: #1a73e8;
+            color: white;
+            border: 2px solid #1a73e8;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .search-box button:hover {
+            background: #1557b0;
+        }
+        .results {
+            margin-top: 30px;
+            width: 600px;
+            max-width: 90vw;
+            margin-bottom: 60px;
+        }
+        .results-header {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .result-item {
+            background: white;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: box-shadow 0.2s;
+        }
+        .result-item:hover {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+        .result-rank {
+            font-size: 0.8rem;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        .result-title {
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .result-title a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .result-title a:hover {
+            text-decoration: underline;
+        }
+        .result-url {
+            font-size: 0.8rem;
+            color: #0d652d;
+            margin-bottom: 4px;
+            word-break: break-all;
+        }
+        .result-score {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        .no-results {
+            text-align: center;
+            color: #999;
+            margin-top: 40px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔍 Vector Search</h1>
+        <p>TF-IDF based vector search engine over 103 Wikipedia articles</p>
+    </div>
+
+    <form method="POST" action="/">
+        <div class="search-box">
+            <input type="text" name="query" placeholder="Enter your search query..." value="{{ query }}" autofocus>
+            <button type="submit">Search</button>
+        </div>
+    </form>
+
+    <div class="results">
+        {% if query %}
+            {% if results %}
+                <div class="results-header">Top {{ results|length }} results for "{{ query }}"</div>
+                {% for r in results %}
+                <div class="result-item">
+                    <div class="result-rank">#{{ loop.index }}</div>
+                    <div class="result-title"><a href="{{ r.url }}" target="_blank">{{ r.title }}</a></div>
+                    <div class="result-url">{{ r.url }}</div>
+                    <div class="result-score">Relevance: {{ r.score }}</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-results">No results found for "{{ query }}"</div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
